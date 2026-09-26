@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dream | Império</title>
+
+<style>
+
+/* ================================
+   CONFIGURAÇÕES GERAIS
+================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --fundo: #090914;
+    --fundo2: #111124;
+    --painel: #17172d;
+    --painel2: #202044;
+
+    --roxo: #7657e8;
+    --roxo-claro: #a98cff;
+
+    --dourado: #d7b35b;
+    --dourado-claro: #f1d98a;
+
+    --azul: #4d8dff;
+    --vermelho: #d94d62;
+    --verde: #4fbd88;
+
+    --branco: #f4f1ea;
+    --cinza: #aaa8b8;
+
+    --borda: #39385e;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, #29205a 0%, transparent 30%),
+        radial-gradient(circle at bottom right, #351b49 0%, transparent 30%),
+        var(--fundo);
+
+    color: var(--branco);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    min-height: 100vh;
+}
+
+
+/* ================================
+   CABEÇALHO
+================================ */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    background: rgba(9, 9, 20, 0.94);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid var(--borda);
+
+    box-shadow: 0 5px 25px rgba(0,0,0,0.4);
+}
+
+.header-container {
+    max-width: 1250px;
+    margin: auto;
+
+    padding: 18px 5%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+
+/* LOGO */
+
+.logo {
+    font-size: 30px;
+
+    letter-spacing: 6px;
+
+    font-weight: bold;
+
+    color: var(--dourado-claro);
+
+    white-space: nowrap;
+}
+
+.logo span {
+    color: var(--roxo-claro);
+}
+
+.logo-small {
+    display: block;
+
+    font-size: 9px;
+
+    letter-spacing: 4px;
+
+    color: var(--cinza);
+
+    margin-top: 3px;
+
+    text-align: center;
+}
+
+
+/* ================================
+   MENU
+================================ */
+
+nav {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+}
+
+nav button {
+    background: #17172c;
+
+    color: var(--branco);
+
+    border: 1px solid var(--borda);
+
+    padding: 11px 15px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-family: Georgia, serif;
+
+    transition: 0.25s;
+}
+
+nav button:hover {
+    background: #28264e;
+
+    border-color: var(--roxo-claro);
+
+    transform: translateY(-2px);
+}
+
+nav button.active {
+    background:
+        linear-gradient(
+            135deg,
+            var(--roxo),
+            #49359e
+        );
+
+    border-color: var(--roxo-claro);
+
+    box-shadow: 0 0 15px rgba(118,87,232,0.35);
+}
+
+
+/* ================================
+   CONTEÚDO
+================================ */
+
+main {
+    max-width: 1250px;
+
+    margin: auto;
+
+    padding: 40px 5% 80px;
+}
+
+.page {
+    display: none;
+
+    animation: aparecer 0.25s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes aparecer {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* ================================
+   HERO
+================================ */
+
+.hero {
+    min-height: 500px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    position: relative;
+}
+
+.hero-content {
+    max-width: 850px;
+}
+
+.simbolo {
+    font-size: 55px;
+
+    color: var(--dourado);
+
+    margin-bottom: 15px;
+
+    text-shadow:
+        0 0 20px rgba(215,179,91,0.35);
+}
+
+.subtitulo {
+    text-transform: uppercase;
+
+    letter-spacing: 6px;
+
+    color: var(--roxo-claro);
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+h1 {
+    font-size: clamp(48px, 8vw, 90px);
+
+    letter-spacing: 8px;
+
+    margin: 15px 0;
+
+    color: var(--branco);
+
+    text-shadow:
+        0 0 30px rgba(118,87,232,0.25);
+}
+
+.linha {
+    width: 70%;
+
+    height: 1px;
+
+    margin: 20px auto;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--dourado),
+            var(--roxo-claro),
+            transparent
+        );
+}
+
+.hero p {
+    color: var(--cinza);
+
+    font-size: 17px;
+
+    line-height: 1.8;
+}
+
+
+/* ================================
+   BOTÕES
+================================ */
+
+.botoes {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+.botao {
+    background: #19182e;
+
+    border: 1px solid var(--borda);
+
+    color: var(--branco);
+
+    padding: 12px 18px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-family: Georgia, serif;
+
+    transition: 0.25s;
+}
+
+.botao:hover {
+    transform: translateY(-2px);
+
+    border-color: var(--roxo-claro);
+
+    background: #27254b;
+}
+
+.botao-principal {
+    background:
+        linear-gradient(
+            135deg,
+            var(--roxo),
+            #543bb1
+        );
+
+    border-color: var(--roxo-claro);
+
+    box-shadow:
+        0 5px 20px rgba(118,87,232,0.25);
+}
+
+.botao-principal:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #8c6cff,
+            #6046c7
+        );
+}
+
+.botao-vermelho {
+    background: #35151d;
+
+    border-color: #70313d;
+}
+
+.botao-vermelho:hover {
+    background: #54202c;
+
+    border-color: var(--vermelho);
+}
+
+
+/* ================================
+   TÍTULOS
+================================ */
+
+.titulo {
+    color: var(--dourado-claro);
+
+    font-size: 32px;
+
+    margin-bottom: 10px;
+}
+
+.descricao {
+    color: var(--cinza);
+
+    margin-bottom: 25px;
+
+    line-height: 1.6;
+}
+
+
+/* ================================
+   CARDS
+================================ */
+
+.grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(240px, 1fr)
+        );
+
+    gap: 18px;
+}
+
+.card {
+    background:
+        linear-gradient(
+            145deg,
+            var(--painel),
+            #10101e
+        );
+
+    border: 1px solid var(--borda);
+
+    border-radius: 10px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.3);
+
+    transition: 0.25s;
+}
+
+.card:hover {
+    border-color: #665b91;
+
+    transform: translateY(-3px);
+}
+
+.card h3 {
+    color: var(--dourado-claro);
+
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: var(--cinza);
+
+    line-height: 1.6;
+}
+
+
+/* ================================
+   CORES DOS CARDS
+================================ */
+
+.card-roxo {
+    border-top: 3px solid var(--roxo);
+}
+
+.card-azul {
+    border-top: 3px solid var(--azul);
+}
+
+.card-dourado {
+    border-top: 3px solid var(--dourado);
+}
+
+.card-vermelho {
+    border-top: 3px solid var(--vermelho);
+}
+
+
+/* ================================
+   FORMULÁRIO
+================================ */
+
+.form-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(300px, 0.8fr);
+
+    gap: 20px;
+}
+
+form {
+    display: grid;
+
+    gap: 14px;
+}
+
+.campo {
+    display: grid;
+
+    gap: 7px;
+}
+
+.campo label {
+    color: var(--dourado-claro);
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+
+    background: #0e0e1b;
+
+    border: 1px solid var(--borda);
+
+    color: var(--branco);
+
+    padding: 12px;
+
+    border-radius: 6px;
+
+    font-family: Georgia, serif;
+
+    transition: 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+
+    border-color: var(--roxo-claro);
+
+    box-shadow:
+        0 0 10px rgba(118,87,232,0.15);
+}
+
+textarea {
+    min-height: 120px;
+
+    resize: vertical;
+}
+
+textarea.longa {
+    min-height: 200px;
+}
+
+
+/* ================================
+   TAGS
+================================ */
+
+.tag {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    margin: 3px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    color: var(--branco);
+
+    background: #29244a;
+
+    border: 1px solid #51457f;
+}
+
+
+/* ================================
+   FICHA
+================================ */
+
+.ficha {
+    position: relative;
+
+    overflow: hidden;
+}
+
+.ficha::after {
+    content: "✦";
+
+    position: absolute;
+
+    right: 15px;
+
+    top: -20px;
+
+    font-size: 130px;
+
+    color: rgba(255,255,255,0.025);
+
+    pointer-events: none;
+}
+
+.linha-info {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 9px 0;
+
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+
+    color: var(--cinza);
+}
+
+.linha-info strong {
+    color: var(--branco);
+}
+
+.ficha h4 {
+    color: var(--roxo-claro);
+
+    margin-top: 18px;
+
+    margin-bottom: 6px;
+}
+
+
+/* ================================
+   AVISO
+================================ */
+
+.aviso {
+    padding: 16px;
+
+    margin-bottom: 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(118,87,232,0.15),
+            rgba(215,179,91,0.08)
+        );
+
+    border-left: 3px solid var(--roxo-claro);
+
+    border-radius: 5px;
+
+    color: var(--cinza);
+
+    line-height: 1.6;
+}
+
+
+/* ================================
+   VAZIO
+================================ */
+
+.vazio {
+    text-align: center;
+
+    padding: 40px;
+
+    color: var(--cinza);
+
+    border: 1px dashed var(--borda);
+
+    border-radius: 10px;
+
+    grid-column: 1 / -1;
+}
+
+
+/* ================================
+   RODAPÉ
+================================ */
+
+footer {
+    border-top: 1px solid var(--borda);
+
+    text-align: center;
+
+    padding: 25px;
+
+    color: var(--cinza);
+
+    font-size: 13px;
+}
+
+
+/* ================================
+   CELULAR
+================================ */
+
+@media(max-width: 850px) {
+
+    .header-container {
+        display: block;
+    }
+
+    nav {
+        margin-top: 15px;
+
+        justify-content: flex-start;
+    }
+
+    .form-layout {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media(max-width: 500px) {
+
+    nav button {
+        flex: 1;
+
+        min-width: 120px;
+    }
+
+    h1 {
+        letter-spacing: 4px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     CABEÇALHO
+========================================== -->
+
+<header>
+
+<div class="header-container">
+
+<div class="logo">
+    DREAM
+    <span>✦</span>
+
+    <span class="logo-small">
+        GRANDE IMPÉRIO
+    </span>
+</div>
+
+
+<nav>
+
+<button
+    class="active"
+    onclick="abrirPagina('inicio', this)">
+    Início
+</button>
+
+<button
+    onclick="abrirPagina('fichas', this)">
+    Fichas
+</button>
+
+<button
+    onclick="abrirPagina('criar', this)">
+    Criar Personagem
+</button>
+
+<button
+    onclick="abrirPagina('sobre', this)">
+    Sobre a Dream
+</button>
+
+</nav>
+
+</div>
+
+</header>
+
+
+
+<!-- ==========================================
+     CONTEÚDO
+========================================== -->
+
+<main>
+
+
+<!-- ==========================================
+     INÍCIO
+========================================== -->
+
+<section
+    id="inicio"
+    class="page active">
+
+<div class="hero">
+
+<div class="hero-content">
+
+<div class="simbolo">
+    ♜
+</div>
+
+<div class="subtitulo">
+    O Grande Império
+</div>
+
+<h1>
+    DREAM
+</h1>
+
+<div class="linha"></div>
+
+<p>
+    Um grande império formado por diferentes povos,
+    territórios e histórias. Cada personagem possui
+    sua própria origem, seu passado e seu lugar
+    dentro deste vasto universo.
+</p>
+
+<div class="botoes">
+
+<button
+    class="botao botao-principal"
+    onclick="abrirPagina('criar')">
+
+    ✦ Criar personagem
+
+</button>
+
+
+<button
+    class="botao"
+    onclick="abrirPagina('fichas')">
+
+    📜 Ver fichas
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="titulo">
+    O Universo de Dream
+</div>
+
+<p class="descricao">
+    Dream representa uma estrutura maior que reúne
+    diferentes territórios e povos. Dentro desse
+    universo existem histórias que podem se cruzar,
+    personagens que podem se encontrar e acontecimentos
+    que podem mudar o rumo do império.
+</p>
+
+
+<div class="grid">
+
+
+<div class="card card-roxo">
+
+<h3>
+    👑 O Império
+</h3>
+
+<p>
+    Dream é a grande estrutura que conecta os
+    diferentes territórios e histórias do universo.
+</p>
+
+</div>
+
+
+<div class="card card-azul">
+
+<h3>
+    ⚔️ Personagens
+</h3>
+
+<p>
+    Cada personagem possui uma história própria,
+    podendo participar de diferentes acontecimentos
+    dentro do RP.
+</p>
+
+</div>
+
+
+<div class="card card-dourado">
+
+<h3>
+    📜 Histórias
+</h3>
+
+<p>
+    A história de cada personagem pode ser registrada
+    e desenvolvida através de sua ficha.
+</p>
+
+</div>
+
+
+</div>
+
+
+<div style="margin-top:40px">
+
+<div class="titulo">
+    Personagens recentes
+</div>
+
+<div
+    id="personagensInicio"
+    class="grid">
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ==========================================
+     FICHAS
+========================================== -->
+
+<section
+    id="fichas"
+    class="page">
+
+<h2 class="titulo">
+    Fichas de Personagens
+</h2>
+
+<p class="descricao">
+    Aqui ficam todas as fichas criadas neste navegador.
+</p>
+
+
+<div
+    id="listaFichas"
+    class="grid">
+</div>
+
+</section>
+
+
+
+<!-- ==========================================
+     CRIAR PERSONAGEM
+========================================== -->
+
+<section
+    id="criar"
+    class="page">
+
+<h2 class="titulo">
+    Criar Personagem
+</h2>
+
+<p class="descricao">
+    Preencha as informações para registrar um novo
+    personagem no universo de Dream.
+</p>
+
+
+<div class="form-layout">
+
+
+<!-- FORMULÁRIO -->
+
+<div class="card">
+
+<form id="formPersonagem">
+
+
+<div class="campo">
+
+<label>
+    Nome
+</label>
+
+<input
+    id="nome"
+    type="text"
+    placeholder="Nome do personagem"
+    required>
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Nick / Identificação
+</label>
+
+<input
+    id="nick"
+    type="text"
+    placeholder="Nick do jogador">
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Gênero
+</label>
+
+<select id="genero">
+
+<option>Masculino</option>
+
+<option>Feminino</option>
+
+<option>Outro</option>
+
+<option>Prefiro não informar</option>
+
+</select>
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Raça
+</label>
+
+<input
+    id="raca"
+    type="text"
+    placeholder="Ex.: Humano, Elfo, etc.">
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Origem
+</label>
+
+<input
+    id="origem"
+    type="text"
+    placeholder="Onde o personagem nasceu?">
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Local onde vive atualmente
+</label>
+
+<input
+    id="local"
+    type="text"
+    placeholder="Onde o personagem vive atualmente?">
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Profissão / Função
+</label>
+
+<input
+    id="funcao"
+    type="text"
+    placeholder="Ex.: Comerciante, guerreiro, nobre...">
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Idade
+</label>
+
+<input
+    id="idade"
+    type="number"
+    min="0"
+    placeholder="Idade">
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Aparência
+</label>
+
+<textarea
+    id="aparencia"
+    placeholder="Descreva a aparência do personagem..."></textarea>
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Personalidade
+</label>
+
+<textarea
+    id="personalidade"
+    placeholder="Como esse personagem age e pensa?"></textarea>
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Habilidades
+</label>
+
+<textarea
+    id="habilidades"
+    placeholder="Liste as habilidades do personagem..."></textarea>
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Equipamentos / Relíquias
+</label>
+
+<textarea
+    id="equipamentos"
+    placeholder="Itens importantes, armas, relíquias etc."></textarea>
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Lore do personagem
+</label>
+
+<textarea
+    id="lore"
+    class="longa"
+    placeholder="Conte a história completa do personagem..."></textarea>
+
+</div>
+
+
+
+<div class="campo">
+
+<label>
+    Frase marcante
+</label>
+
+<input
+    id="frase"
+    type="text"
+    placeholder="Uma frase característica">
+
+</div>
+
+
+
+<div class="botoes">
+
+<button
+    type="submit"
+    class="botao botao-principal">
+
+    ✦ Registrar personagem
+
+</button>
+
+
+<button
+    type="button"
+    class="botao"
+    onclick="limparFormulario()">
+
+    Limpar
+
+</button>
+
+</div>
+
+
+</form>
+
+</div>
+
+
+
+<!-- PRÉVIA -->
+
+<div class="card">
+
+<h3>
+    Prévia da ficha
+</h3>
+
+<div
+    id="preview"
+    class="vazio">
+
+    Comece a preencher os dados
+    para visualizar a ficha.
+
+</div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- ==========================================
+     SOBRE
+========================================== -->
+
+<section
+    id="sobre"
+    class="page">
+
+<h2 class="titulo">
+    Sobre a Dream
+</h2>
+
+
+<div class="aviso">
+
+Dream é o grande império onde diferentes
+territórios, povos e histórias existem.
+Este site foi criado para organizar os
+personagens que fazem parte desse universo.
+
+</div>
+
+
+<div class="grid">
+
+
+<div class="card card-roxo">
+
+<h3>
+    👑 Dream
+</h3>
+
+<p>
+    O império funciona como a estrutura maior
+    desse universo, reunindo diferentes povos
+    e territórios.
+</p>
+
+</div>
+
+
+<div class="card card-dourado">
+
+<h3>
+    📜 Fichas
+</h3>
+
+<p>
+    Cada personagem pode possuir sua própria
+    identidade, origem, personalidade e história.
+</p>
+
+</div>
+
+
+<div class="card card-azul">
+
+<h3>
+    ⚔️ RP
+</h3>
+
+<p>
+    As fichas servem como uma forma de organizar
+    os personagens utilizados no roleplay.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- ==========================================
+     RODAPÉ
+========================================== -->
+
+<footer>
+
+Dream • Grande Império
+
+<br><br>
+
+Sistema de fichas para Roleplay
+
+</footer>
+
+
+
+<script>
+
+/* ==========================================
+   SISTEMA DE NAVEGAÇÃO
+========================================== */
+
+function abrirPagina(id, botao) {
+
+    const paginas =
+        document.querySelectorAll(".page");
+
+    paginas.forEach(function(pagina) {
+
+        pagina.classList.remove("active");
+
+    });
+
+
+    const paginaEscolhida =
+        document.getElementById(id);
+
+
+    if (paginaEscolhida) {
+
+        paginaEscolhida.classList.add("active");
+
+    }
+
+
+    const botoes =
+        document.querySelectorAll("nav button");
+
+    botoes.forEach(function(botaoMenu) {
+
+        botaoMenu.classList.remove("active");
+
+    });
+
+
+    if (botao) {
+
+        botao.classList.add("active");
+
+    }
+
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+    });
+
+
+    atualizarFichas();
+
+}
+
+
+/* ==========================================
+   BANCO LOCAL
+========================================== */
+
+let personagens =
+    JSON.parse(
+        localStorage.getItem("dream_personagens")
+        || "[]"
+    );
+
+
+/* ==========================================
+   WEBHOOK DO DISCORD
+========================================== */
+
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1553470216133017670/n4J5n-gwat7xcD_BG49fATvNOvMVbUYHuxEvdE9Dm2nwHjixzKTLjnJmp5-OMykK0NWM";
+
+function enviarParaDiscord(personagem) {
+
+    if (
+        !WEBHOOK_URL ||
+        WEBHOOK_URL.includes("COLE_AQUI")
+    ) {
+        console.warn(
+            "Webhook do Discord não configurado."
+        );
+        return;
+    }
+
+    function cortar(texto) {
+        texto = String(texto || "Não informado");
+        return texto.length > 1000
+            ? texto.slice(0, 1000) + "..."
+            : texto;
+    }
+
+    const embed = {
+        title: "📜 Nova ficha: " + (personagem.nome || "Sem nome"),
+        color: 0x7657e8,
+        fields: [
+            { name: "Nick", value: cortar(personagem.nick), inline: true },
+            { name: "Gênero", value: cortar(personagem.genero), inline: true },
+            { name: "Raça", value: cortar(personagem.raca), inline: true },
+            { name: "Origem", value: cortar(personagem.origem), inline: true },
+            { name: "Local atual", value: cortar(personagem.local), inline: true },
+            { name: "Função", value: cortar(personagem.funcao), inline: true },
+            { name: "Idade", value: cortar(personagem.idade), inline: true },
+            { name: "Aparência", value: cortar(personagem.aparencia) },
+            { name: "Personalidade", value: cortar(personagem.personalidade) },
+            { name: "Habilidades", value: cortar(personagem.habilidades) },
+            { name: "Equipamentos", value: cortar(personagem.equipamentos) },
+            { name: "Lore", value: cortar(personagem.lore) }
+        ],
+        footer: { text: "Dream | Império" }
+    };
+
+    if (personagem.frase) {
+        embed.description = "*\"" + personagem.frase + "\"*";
+    }
+
+    fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ embeds: [embed] })
+    }).catch(function(erro) {
+        console.error("Erro ao enviar para o Discord:", erro);
+    });
+
+}
+
+
+/* ==========================================
+   ESCAPAR TEXTO
+========================================== */
+
+function escapar(texto) {
+
+    return String(texto || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* ==========================================
+   SALVAR
+========================================== */
+
+function salvarPersonagens() {
+
+    localStorage.setItem(
+        "dream_personagens",
+        JSON.stringify(personagens)
+    );
+
+}
+
+
+/* ==========================================
+   FORMULÁRIO
+========================================== */
+
+document
+.getElementById("formPersonagem")
+.addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const personagem = {
+
+            id: Date.now(),
+
+            nome:
+                document.getElementById("nome").value,
+
+            nick:
+                document.getElementById("nick").value,
+
+            genero:
+                document.getElementById("genero").value,
+
+            raca:
+                document.getElementById("raca").value,
+
+            origem:
+                document.getElementById("origem").value,
+
+            local:
+                document.getElementById("local").value,
+
+            funcao:
+                document.getElementById("funcao").value,
+
+            idade:
+                document.getElementById("idade").value,
+
+            aparencia:
+                document.getElementById("aparencia").value,
+
+            personalidade:
+                document.getElementById("personalidade").value,
+
+            habilidades:
+                document.getElementById("habilidades").value,
+
+            equipamentos:
+                document.getElementById("equipamentos").value,
+
+            lore:
+                document.getElementById("lore").value,
+
+            frase:
+                document.getElementById("frase").value
+
+        };
+
+
+        personagens.unshift(personagem);
+
+
+        salvarPersonagens();
+
+
+        enviarParaDiscord(personagem);
+
+
+        alert(
+            "Personagem registrado com sucesso!"
+        );
+
+
+        limparFormulario();
+
+
+        abrirPagina("fichas");
+
+
+        atualizarFichas();
+
+    }
+);
+
+
+/* ==========================================
+   LIMPAR
+========================================== */
+
+function limparFormulario() {
+
+    document
+    .getElementById("formPersonagem")
+    .reset();
+
+
+    document.getElementById(
+        "preview"
+    ).innerHTML =
+
+        "Comece a preencher os dados " +
+        "para visualizar a ficha.";
+
+    document.getElementById(
+        "preview"
+    ).className = "vazio";
+
+}
+
+
+/* ==========================================
+   CRIAR CARD
+========================================== */
+
+function criarCard(personagem) {
+
+    return `
+
+    <div class="card ficha">
+
+        <h3>
+            ${escapar(personagem.nome)}
+        </h3>
+
+
+        <span class="tag">
+            ${escapar(personagem.raca || "Raça não informada")}
+        </span>
+
+
+        <span class="tag">
+            ${escapar(personagem.funcao || "Sem função")}
+        </span>
+
+
+        <div class="linha-info">
+
+            <strong>Gênero</strong>
+
+            <span>
+                ${escapar(personagem.genero)}
+            </span>
+
+        </div>
+
+
+        <div class="linha-info">
+
+            <strong>Origem</strong>
+
+            <span>
+                ${escapar(personagem.origem || "Não informada")}
+            </span>
+
+        </div>
+
+
+        <div class="linha-info">
+
+            <strong>Local atual</strong>
+
+            <span>
+                ${escapar(personagem.local || "Não informado")}
+            </span>
+
+        </div>
+
+
+        <div class="linha-info">
+
+            <strong>Idade</strong>
+
+            <span>
+                ${escapar(personagem.idade || "Não informada")}
+            </span>
+
+        </div>
+
+
+        ${
+            personagem.frase
+
+            ?
+
+            `<p style="margin-top:15px">
+                <i>
+                    "${escapar(personagem.frase)}"
+                </i>
+            </p>`
+
+            :
+
+            ""
+        }
+
+
+        <details style="margin-top:18px">
+
+            <summary>
+                Ver ficha completa
+            </summary>
+
+
+            <h4>
+                Aparência
+            </h4>
+
+            <p>
+                ${escapar(
+                    personagem.aparencia ||
+                    "Não informada."
+                )}
+            </p>
+
+
+            <h4>
+                Personalidade
+            </h4>
+
+            <p>
+                ${escapar(
+                    personagem.personalidade ||
+                    "Não informada."
+                )}
+            </p>
+
+
+            <h4>
+                Habilidades
+            </h4>
+
+            <p>
+                ${escapar(
+                    personagem.habilidades ||
+                    "Nenhuma habilidade informada."
+                ).replace(/\n/g, "<br>")}
+            </p>
+
+
+            <h4>
+                Equipamentos / Relíquias
+            </h4>
+
+            <p>
+                ${escapar(
+                    personagem.equipamentos ||
+                    "Nenhum equipamento informado."
+                ).replace(/\n/g, "<br>")}
+            </p>
+
+
+            <h4>
+                Lore
+            </h4>
+
+            <p>
+                ${escapar(
+                    personagem.lore ||
+                    "Nenhuma lore informada."
+                ).replace(/\n/g, "<br>")}
+            </p>
+
+        </details>
+
+
+        <div class="botoes"
+             style="justify-content:flex-start">
+
+            <button
+                class="botao botao-vermelho"
+                onclick="excluirPersonagem(${personagem.id})">
+
+                🗑 Excluir
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+/* ==========================================
+   ATUALIZAR FICHAS
+========================================== */
+
+function atualizarFichas() {
+
+    const lista =
+        document.getElementById(
+            "listaFichas"
+        );
+
+    const inicio =
+        document.getElementById(
+            "personagensInicio"
+        );
+
+
+    if (!lista || !inicio) {
+
+        return;
+
+    }
+
+
+    if (personagens.length === 0) {
+
+        lista.innerHTML = `
+
+            <div class="vazio">
+
+                Nenhum personagem foi criado ainda.
+
+                <br><br>
+
+                <button
+                    class="botao botao-principal"
+                    onclick="abrirPagina('criar')">
+
+                    ✦ Criar primeiro personagem
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        inicio.innerHTML = `
+
+            <div class="vazio">
+
+                Ainda não existem personagens.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    lista.innerHTML =
+        personagens
+        .map(criarCard)
+        .join("");
+
+
+    inicio.innerHTML =
+        personagens
+        .slice(0, 3)
+        .map(criarCard)
+        .join("");
+
+}
+
+
+/* ==========================================
+   EXCLUIR
+========================================== */
+
+function excluirPersonagem(id) {
+
+    const confirmar =
+        confirm(
+            "Tem certeza que deseja excluir esta ficha?"
+        );
+
+
+    if (!confirmar) {
+
+        return;
+
+    }
+
+
+    personagens =
+        personagens.filter(
+            function(personagem) {
+
+                return personagem.id !== id;
+
+            }
+        );
+
+
+    salvarPersonagens();
+
+
+    atualizarFichas();
+
+}
+
+
+/* ==========================================
+   PRÉVIA AUTOMÁTICA
+========================================== */
+
+const campos = [
+
+    "nome",
+    "nick",
+    "genero",
+    "raca",
+    "origem",
+    "local",
+    "funcao",
+    "idade",
+    "aparencia",
+    "personalidade",
+    "habilidades",
+    "equipamentos",
+    "lore",
+    "frase"
+
+];
+
+
+campos.forEach(function(id) {
+
+    const campo =
+        document.getElementById(id);
+
+
+    campo.addEventListener(
+        "input",
+        atualizarPreview
+    );
+
+});
+
+
+function atualizarPreview() {
+
+    const nome =
+        document.getElementById("nome").value;
+
+
+    const preview =
+        document.getElementById("preview");
+
+
+    if (!nome) {
+
+        preview.className = "vazio";
+
+        preview.innerHTML =
+            "Comece a preencher os dados " +
+            "para visualizar a ficha.";
+
+        return;
+
+    }
+
+
+    preview.className = "ficha";
+
+
+    preview.innerHTML = `
+
+        <h2>
+            ${escapar(nome)}
+        </h2>
+
+
+        <span class="tag">
+            ${escapar(
+                document.getElementById("raca").value ||
+                "Raça"
+            )}
+        </span>
+
+
+        <span class="tag">
+            ${escapar(
+                document.getElementById("funcao").value ||
+                "Função"
+            )}
+        </span>
+
+
+        <h4>
+            Origem
+        </h4>
+
+        <p>
+            ${escapar(
+                document.getElementById("origem").value ||
+                "Não informada."
+            )}
+        </p>
+
+
+        <h4>
+            Local atual
+        </h4>
+
+        <p>
+            ${escapar(
+                document.getElementById("local").value ||
+                "Não informado."
+            )}
+        </p>
+
+
+        <h4>
+            Personalidade
+        </h4>
+
+        <p>
+            ${escapar(
+                document.getElementById("personalidade").value ||
+                "Ainda não preenchida."
+            )}
+        </p>
+
+
+        <h4>
+            Lore
+        </h4>
+
+        <p>
+            ${escapar(
+                document.getElementById("lore").value ||
+                "A história aparecerá aqui."
+            )}
+        </p>
+
+    `;
+
+}
+
+
+/* ==========================================
+   INICIAR
+========================================== */
+
+atualizarFichas();
+
+</script>
+
+
+</body>
+</html>
