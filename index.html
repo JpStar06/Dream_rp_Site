@@ -1416,61 +1416,8 @@ let personagens =
 
 /* ==========================================
    WEBHOOK DO DISCORD
+   O envio é feito pelo servidor para manter a URL secreta.
 ========================================== */
-
-function enviarParaDiscord(personagem) {
-
-    if (
-        !WEBHOOK_URL ||
-        WEBHOOK_URL.includes("COLE_AQUI")
-    ) {
-        console.warn(
-            "Webhook do Discord não configurado."
-        );
-        return;
-    }
-
-    function cortar(texto) {
-        texto = String(texto || "Não informado");
-        return texto.length > 1000
-            ? texto.slice(0, 1000) + "..."
-            : texto;
-    }
-
-    const embed = {
-        title: "📜 Nova ficha: " + (personagem.nome || "Sem nome"),
-        color: 0x7657e8,
-        fields: [
-            { name: "Nick", value: cortar(personagem.nick), inline: true },
-            { name: "Gênero", value: cortar(personagem.genero), inline: true },
-            { name: "Raça", value: cortar(personagem.raca), inline: true },
-            { name: "Origem", value: cortar(personagem.origem), inline: true },
-            { name: "Local atual", value: cortar(personagem.local), inline: true },
-            { name: "Função", value: cortar(personagem.funcao), inline: true },
-            { name: "Idade", value: cortar(personagem.idade), inline: true },
-            { name: "Aparência", value: cortar(personagem.aparencia) },
-            { name: "Personalidade", value: cortar(personagem.personalidade) },
-            { name: "Habilidades", value: cortar(personagem.habilidades) },
-            { name: "Equipamentos", value: cortar(personagem.equipamentos) },
-            { name: "Lore", value: cortar(personagem.lore) }
-        ],
-        footer: { text: "Dream | Império" }
-    };
-
-    if (personagem.frase) {
-        embed.description = "*\"" + personagem.frase + "\"*";
-    }
-
-    fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ embeds: [embed] })
-    }).catch(function(erro) {
-        console.error("Erro ao enviar para o Discord:", erro);
-    });
-
-}
-
 
 /* ==========================================
    ESCAPAR TEXTO
@@ -1538,18 +1485,19 @@ document
         // --- NOSSA ALTERAÇÃO SEGURA COMEÇA AQUI ---
         // Envia os dados para o seu index.js sem expor a chave secreta
         try {
-            fetch('/enviar-webhook', {
+            const resposta = await fetch('/enviar-webhook', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(personagem)
-            }); 
-            // Deixamos sem "await" de propósito para o site não travar 
-            // caso a internet do usuário esteja lenta para enviar o webhook
+            });
+
+            if (!resposta.ok) {
+                throw new Error(`Servidor respondeu com HTTP ${resposta.status}`);
+            }
         } catch (erro) {
             console.error("Erro ao mandar pro servidor:", erro);
+            alert("A ficha foi salva neste navegador, mas não foi possível enviar ao Discord.");
         }
-        // --- NOSSA ALTERAÇÃO TERMINA AQUI ---
-        // ---JpStar06 não aguenta mais mexer nesse código, ele é muito sujo
 
         alert("Personagem registrado com sucesso!");
         limparFormulario();
