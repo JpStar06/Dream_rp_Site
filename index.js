@@ -11,6 +11,10 @@ const WEBHOOK_URL = process.env.WEBHOOK_URL;
 app.use(express.json({ limit: '100kb' }));
 app.use(express.static(path.join(__dirname, '.')));
 
+app.get('/', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Rota simples para verificar se o servidor está saudável.
 app.get('/health', (_req, res) => {
     res.status(200).json({ ok: true });
