@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 
 // Serve todos os arquivos estáticos da raiz (HTML, CSS, imagens)
-app.use(express.static(path.join(__dirname, '.'))); 
+app.use(express.static(path.join(__dirname, './index.html'))); 
 
 // CORREÇÃO: O Express mais recente exige um nome após o asterisco (ex: *splat)
 app.get('/*splat', (req, res) => {
