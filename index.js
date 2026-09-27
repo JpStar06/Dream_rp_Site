@@ -12,8 +12,20 @@ const WEBHOOK_URL = process.env.WEBHOOK_URL;
 // para que req.ip represente o IP original do cliente.
 app.set('trust proxy', 1);
 
-app.use(express.json({ limit: '100kb' }));
-app.use(express.static(path.join(__dirname, '.')));
+// O backend não deve expor o diretório inteiro como conteúdo estático.
+// Isso impediria que arquivos como index.js/package.json fossem baixados
+// diretamente pelo navegador.
+app.disable('x-powered-by');
+
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    next();
+});
+
+app.use(express.json({ limit: '32kb' }));
 
 app.get('/', (_req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -79,6 +91,7 @@ function verificarRateLimit(ip) {
 
 // Limites alinhados aos limites práticos dos campos da embed.
 // O Discord permite no máximo 1024 caracteres por value de field.
+// O tamanho total da embed é validado separadamente contra o limite de 6000.
 const LIMITES = {
     nome: 80,
     nick: 80,
@@ -233,30 +246,39 @@ function montarPayloadDiscord(personagem) {
     };
 }
 
+// O Discord limita cada embed a 6000 caracteres somando título,
+// nomes/valores dos fields, footer, descrição etc.
+function calcularTamanhoEmbed(embed) {
+    let tamanho = 0;
+
+    tamanho += embed.title?.length || 0;
+    tamanho += embed.description?.length || 0;
+    tamanho += embed.footer?.text?.length || 0;
+    tamanho += embed.author?.name?.length || 0;
+
+    for (const field of embed.fields || []) {
+        tamanho += field.name?.length || 0;
+        tamanho += field.value?.length || 0;
+    }
+
+    return tamanho;
+}
+
+function validarTamanhoDiscord(payload) {
+    const embed = payload.embeds?.[0];
+
+    if (!embed) {
+        return true;
+    }
+
+    return calcularTamanhoEmbed(embed) <= 6000;
+}
+
 // ==========================================
 // ENVIO DO WEBHOOK
 // ==========================================
 
 app.post('/enviar-webhook', async (req, res) => {
-    const ip = req.ip || req.socket.remoteAddress || 'desconhecido';
-    const limite = verificarRateLimit(ip);
-
-    if (!limite.permitido) {
-        res.set('Retry-After', String(limite.retryAfter));
-
-        console.warn(
-            `Rate limit atingido para IP ${ip}. Tente novamente em ${limite.retryAfter}s.`
-        );
-
-        return res.status(429).json({
-            sucesso: false,
-            erro: 'Muitas requisições. Aguarde um pouco antes de tentar novamente.',
-            retryAfter: limite.retryAfter
-        });
-    }
-
-    res.set('X-RateLimit-Remaining', String(limite.restante));
-
     try {
         if (!WEBHOOK_URL) {
             console.error('WEBHOOK_URL não está configurada.');
@@ -268,6 +290,35 @@ app.post('/enviar-webhook', async (req, res) => {
 
         const personagem = validarEConstruirPersonagem(req.body);
         const mensagemDiscord = montarPayloadDiscord(personagem);
+
+        if (!validarTamanhoDiscord(mensagemDiscord)) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: 'A ficha é grande demais para ser enviada ao Discord.'
+            });
+        }
+
+        // Só consome a cota quando a ficha passou pela validação e está pronta
+        // para ser enviada. Assim, requisições obviamente inválidas não bloqueiam
+        // o usuário legítimo por acidente.
+        const ip = req.ip || req.socket.remoteAddress || 'desconhecido';
+        const limite = verificarRateLimit(ip);
+
+        if (!limite.permitido) {
+            res.set('Retry-After', String(limite.retryAfter));
+
+            console.warn(
+                `Rate limit atingido para IP ${ip}. Tente novamente em ${limite.retryAfter}s.`
+            );
+
+            return res.status(429).json({
+                sucesso: false,
+                erro: 'Muitas requisições. Aguarde um pouco antes de tentar novamente.',
+                retryAfter: limite.retryAfter
+            });
+        }
+
+        res.set('X-RateLimit-Remaining', String(limite.restante));
 
         const respostaDiscord = await fetch(WEBHOOK_URL, {
             method: 'POST',
