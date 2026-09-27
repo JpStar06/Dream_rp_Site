@@ -42,7 +42,7 @@ app.post('/enviar-webhook', async (req, res) => {
         const mensagemDiscord = {
             embeds: [{
                 title: `👑 Nova Ficha Criada: ${textoSeguro(ficha.nome, 256)}`,
-                color: 0x00ff00,
+                color: 0x7657e8,
                 fields: [
                     { name: '👤 Nick/ID', value: textoSeguro(ficha.nick), inline: true },
                     { name: '🧬 Gênero', value: textoSeguro(ficha.genero), inline: true },
