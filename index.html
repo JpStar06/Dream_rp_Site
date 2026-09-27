@@ -1417,9 +1417,6 @@ let personagens =
 /* ==========================================
    WEBHOOK DO DISCORD
 ========================================== */
-import 'dotenv/config';
-
-const WEBHOOK_URL = process.env.WEBHOOK_URL;
 
 function enviarParaDiscord(personagem) {
 
@@ -1513,85 +1510,53 @@ document
 .getElementById("formPersonagem")
 .addEventListener(
     "submit",
-    function(event) {
+    async function(event) { // <--- Adicionamos "async" aqui bem no começo
 
         event.preventDefault();
 
-
         const personagem = {
-
             id: Date.now(),
-
-            nome:
-                document.getElementById("nome").value,
-
-            nick:
-                document.getElementById("nick").value,
-
-            genero:
-                document.getElementById("genero").value,
-
-            raca:
-                document.getElementById("raca").value,
-
-            origem:
-                document.getElementById("origem").value,
-
-            local:
-                document.getElementById("local").value,
-
-            funcao:
-                document.getElementById("funcao").value,
-
-            idade:
-                document.getElementById("idade").value,
-
-            aparencia:
-                document.getElementById("aparencia").value,
-
-            personalidade:
-                document.getElementById("personalidade").value,
-
-            habilidades:
-                document.getElementById("habilidades").value,
-
-            equipamentos:
-                document.getElementById("equipamentos").value,
-
-            lore:
-                document.getElementById("lore").value,
-
-            frase:
-                document.getElementById("frase").value
-
+            nome: document.getElementById("nome").value,
+            nick: document.getElementById("nick").value,
+            genero: document.getElementById("genero").value,
+            raca: document.getElementById("raca").value,
+            origem: document.getElementById("origem").value,
+            local: document.getElementById("local").value,
+            funcao: document.getElementById("funcao").value,
+            idade: document.getElementById("idade").value,
+            aparencia: document.getElementById("aparencia").value,
+            personalidade: document.getElementById("personalidade").value,
+            habilidades: document.getElementById("habilidades").value,
+            equipamentos: document.getElementById("equipamentos").value,
+            lore: document.getElementById("lore").value,
+            frase: document.getElementById("frase").value
         };
 
-
         personagens.unshift(personagem);
-
-
         salvarPersonagens();
 
+        // --- NOSSA ALTERAÇÃO SEGURA COMEÇA AQUI ---
+        // Envia os dados para o seu index.js sem expor a chave secreta
+        try {
+            fetch('/enviar-webhook', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(personagem)
+            }); 
+            // Deixamos sem "await" de propósito para o site não travar 
+            // caso a internet do usuário esteja lenta para enviar o webhook
+        } catch (erro) {
+            console.error("Erro ao mandar pro servidor:", erro);
+        }
+        // --- NOSSA ALTERAÇÃO TERMINA AQUI ---
+        // ---JpStar06 não aguenta mais mexer nesse código, ele é muito sujo
 
-        enviarParaDiscord(personagem);
-
-
-        alert(
-            "Personagem registrado com sucesso!"
-        );
-
-
+        alert("Personagem registrado com sucesso!");
         limparFormulario();
-
-
         abrirPagina("fichas");
-
-
         atualizarFichas();
-
     }
 );
-
 
 /* ==========================================
    LIMPAR
