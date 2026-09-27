@@ -73,7 +73,8 @@ app.post('/enviar-webhook', async (req, res) => {
         const respostaDiscord = await fetch(WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(mensagemDiscord)
+            body: JSON.stringify(mensagemDiscord),
+            signal: AbortSignal.timeout(10_000)
         });
 
         if (!respostaDiscord.ok) {
@@ -91,6 +92,15 @@ app.post('/enviar-webhook', async (req, res) => {
 
         return res.status(200).json({ sucesso: true });
     } catch (erro) {
+        if (erro.name === 'TimeoutError') {
+            console.error('Timeout ao enviar a ficha para o Discord.');
+
+            return res.status(504).json({
+                sucesso: false,
+                erro: 'O Discord demorou demais para responder.'
+            });
+        }
+
         console.error('Erro interno no servidor:', erro);
 
         return res.status(500).json({
