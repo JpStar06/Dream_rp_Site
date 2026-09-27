@@ -1,63 +1,110 @@
 const express = require('express');
 const path = require('path');
-const app = express();
-
-// 1. Carrega o dotenv usando require (Padrão CommonJS)
 require('dotenv').config();
 
+const app = express();
+
+const PORT = Number(process.env.PORT) || 8080;
+const HOST = '0.0.0.0';
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
-console.log("Variável WEBHOOK_URL carregada:", WEBHOOK_URL);
 
-// Permite que o Express entenda JSON enviado pelo HTML
-app.use(express.json());
-
-// Serve o seu arquivo index.html na raiz do projeto
+app.use(express.json({ limit: '100kb' }));
 app.use(express.static(path.join(__dirname, '.')));
 
-// 2. Rota unificada para receber os dados e enviar a Embed organizada ao Discord
+// Rota simples para verificar se o servidor está saudável.
+app.get('/health', (_req, res) => {
+    res.status(200).json({ ok: true });
+});
+
+function textoSeguro(valor, limite = 1000) {
+    const texto = String(valor ?? '').trim() || 'Não informado';
+    return texto.length > limite
+        ? texto.slice(0, limite - 3) + '...'
+        : texto;
+}
+
 app.post('/enviar-webhook', async (req, res) => {
     try {
-        const ficha = req.body;
+        if (!WEBHOOK_URL) {
+            console.error('WEBHOOK_URL não está configurada.');
+            return res.status(500).json({
+                sucesso: false,
+                erro: 'Webhook não configurado no servidor.'
+            });
+        }
 
-        // Monta o visual organizado com os dados idênticos ao formulário do HTML
+        const ficha = req.body || {};
+
         const mensagemDiscord = {
             embeds: [{
-                title: `👑 Nova Ficha Criada: ${ficha.nome}`,
-                color: 0x00ff00, // Verde
+                title: `👑 Nova Ficha Criada: ${textoSeguro(ficha.nome, 256)}`,
+                color: 0x00ff00,
                 fields: [
-                    { name: "👤 Nick/ID", value: ficha.nick || "Não informado", inline: true },
-                    { name: "🧬 Gênero", value: ficha.genero || "Não informado", inline: true },
-                    { name: "🧬 Raça", value: ficha.raca || "Não informado", inline: true },
-                    { name: "🌍 Origem / Vive em", value: `${ficha.origem || "Não informado"} / ${ficha.local || "Não informado"}`, inline: false },
-                    { name: "💼 Profissão / Função", value: ficha.funcao || "Não informado", inline: true },
-                    { name: "⏳ Idade", value: ficha.idade || "Não informado", inline: true },
-                    { name: "🎭 Personalidade", value: ficha.personalidade || "Não informado", inline: false },
-                    { name: "✨ Aparência", value: ficha.aparencia || "Não informado", inline: false },
-                    { name: "⚔️ Habilidades", value: ficha.habilidades || "Nenhuma", inline: false },
-                    { name: "🎒 Equipamentos", value: ficha.equipamentos || "Nenhum", inline: false },
-                    { name: "📖 Lore", value: ficha.lore || "Sem lore adicionada", inline: false },
-                    { name: "💬 Frase Marcante", value: ficha.frase ? `"${ficha.frase}"` : "Nenhuma", inline: false }
+                    { name: '👤 Nick/ID', value: textoSeguro(ficha.nick), inline: true },
+                    { name: '🧬 Gênero', value: textoSeguro(ficha.genero), inline: true },
+                    { name: '🧬 Raça', value: textoSeguro(ficha.raca), inline: true },
+                    {
+                        name: '🌍 Origem / Vive em',
+                        value: textoSeguro(`${ficha.origem || 'Não informado'} / ${ficha.local || 'Não informado'}`),
+                        inline: false
+                    },
+                    { name: '💼 Profissão / Função', value: textoSeguro(ficha.funcao), inline: true },
+                    { name: '⏳ Idade', value: textoSeguro(ficha.idade), inline: true },
+                    { name: '🎭 Personalidade', value: textoSeguro(ficha.personalidade), inline: false },
+                    { name: '✨ Aparência', value: textoSeguro(ficha.aparencia), inline: false },
+                    { name: '⚔️ Habilidades', value: textoSeguro(ficha.habilidades), inline: false },
+                    { name: '🎒 Equipamentos', value: textoSeguro(ficha.equipamentos), inline: false },
+                    { name: '📖 Lore', value: textoSeguro(ficha.lore), inline: false },
+                    {
+                        name: '💬 Frase Marcante',
+                        value: ficha.frase ? textoSeguro(`"${ficha.frase}"`) : 'Nenhuma',
+                        inline: false
+                    }
                 ],
-                footer: { text: "Dream • Sistema de Fichas" },
-                timestamp: new Date()
+                footer: { text: 'Dream • Sistema de Fichas' },
+                timestamp: new Date().toISOString()
             }]
         };
 
-        await fetch(WEBHOOK_URL, {
+        const respostaDiscord = await fetch(WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(mensagemDiscord)
         });
 
-        res.status(200).json({ sucesso: true });
+        if (!respostaDiscord.ok) {
+            const detalhe = await respostaDiscord.text().catch(() => '');
+            console.error(
+                `Discord rejeitou o webhook (HTTP ${respostaDiscord.status}):`,
+                detalhe.slice(0, 500)
+            );
+
+            return res.status(502).json({
+                sucesso: false,
+                erro: 'O Discord rejeitou o webhook.'
+            });
+        }
+
+        return res.status(200).json({ sucesso: true });
     } catch (erro) {
-        console.error("Erro interno no servidor:", erro);
-        res.status(500).json({ erro: 'Falha ao disparar o webhook' });
+        console.error('Erro interno no servidor:', erro);
+
+        return res.status(500).json({
+            sucesso: false,
+            erro: 'Falha ao disparar o webhook.'
+        });
     }
 });
 
-// Fixa a porta exigida pela Discloud
-const PORT = 8080;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Servidor rodando com sucesso na porta ${PORT}`);
+const server = app.listen(PORT, HOST, () => {
+    console.log(`Servidor rodando com sucesso em ${HOST}:${PORT}`);
+});
+
+server.on('error', (erro) => {
+    console.error('Erro ao iniciar o servidor:', erro);
+});
+
+process.on('SIGTERM', () => {
+    console.log('SIGTERM recebido. Encerrando o servidor...');
+    server.close(() => process.exit(0));
 });
