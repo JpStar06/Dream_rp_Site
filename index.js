@@ -40,11 +40,11 @@ app.get('/health', (_req, res) => {
 // PROTEÇÕES DO ENVIO DE FICHAS
 // ==========================================
 
-// Limite de 3 fichas por IP a cada 60 segundos.
+// Limite de 2 fichas por IP a cada 60 segundos.
 // O Map é suficiente para esta aplicação porque existe uma única
 // instância do servidor. Entradas antigas são removidas periodicamente.
 const RATE_WINDOW_MS = 60 * 1000;
-const RATE_MAX_REQUESTS = 3;
+const RATE_MAX_REQUESTS = 2;
 const rateLimitMap = new Map();
 
 setInterval(() => {
@@ -327,9 +327,9 @@ app.post('/enviar-webhook', async (req, res) => {
             },
             body: JSON.stringify(mensagemDiscord),
 
-            // Se o Discord não responder em 10 segundos,
+            // Se o Discord não responder em 30 segundos,
             // aborta a requisição para não deixar o servidor preso.
-            signal: AbortSignal.timeout(10_000)
+            signal: AbortSignal.timeout(30_000)
         });
 
         if (!respostaDiscord.ok) {
