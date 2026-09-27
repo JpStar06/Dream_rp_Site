@@ -41,26 +41,26 @@ app.post('/enviar-webhook', async (req, res) => {
 
         const mensagemDiscord = {
             embeds: [{
-                title: `👑 Nova Ficha Criada: ${textoSeguro(ficha.nome, 256)}`,
+                title: `📜 **Nova Ficha Criada: ${textoSeguro(ficha.nome, 256)}**`,
                 color: 0x7657e8,
                 fields: [
-                    { name: '👤 Nick/ID', value: textoSeguro(ficha.nick), inline: true },
-                    { name: '🧬 Gênero', value: textoSeguro(ficha.genero), inline: true },
-                    { name: '🧬 Raça', value: textoSeguro(ficha.raca), inline: true },
+                    { name: '**Nick/ID**', value: textoSeguro(ficha.nick), inline: true },
+                    { name: '**Gênero**', value: textoSeguro(ficha.genero), inline: true },
+                    { name: '**Raça**', value: textoSeguro(ficha.raca), inline: true },
                     {
-                        name: '🌍 Origem / Vive em',
+                        name: '**Origem / Vive em**',
                         value: textoSeguro(`${ficha.origem || 'Não informado'} / ${ficha.local || 'Não informado'}`),
                         inline: false
                     },
-                    { name: '💼 Profissão / Função', value: textoSeguro(ficha.funcao), inline: true },
-                    { name: '⏳ Idade', value: textoSeguro(ficha.idade), inline: true },
-                    { name: '🎭 Personalidade', value: textoSeguro(ficha.personalidade), inline: false },
-                    { name: '✨ Aparência', value: textoSeguro(ficha.aparencia), inline: false },
-                    { name: '⚔️ Habilidades', value: textoSeguro(ficha.habilidades), inline: false },
-                    { name: '🎒 Equipamentos', value: textoSeguro(ficha.equipamentos), inline: false },
-                    { name: '📖 Lore', value: textoSeguro(ficha.lore), inline: false },
+                    { name: '**Profissão / Função**', value: textoSeguro(ficha.funcao), inline: true },
+                    { name: '**Idade**', value: textoSeguro(ficha.idade), inline: true },
+                    { name: '**Personalidade**', value: textoSeguro(ficha.personalidade), inline: false },
+                    { name: '**Aparência**', value: textoSeguro(ficha.aparencia), inline: false },
+                    { name: '**Habilidades**', value: textoSeguro(ficha.habilidades), inline: false },
+                    { name: '**Equipamentos**', value: textoSeguro(ficha.equipamentos), inline: false },
+                    { name: '**Lore**', value: textoSeguro(ficha.lore), inline: false },
                     {
-                        name: '💬 Frase Marcante',
+                        name: '**💬 Frase Marcante**',
                         value: ficha.frase ? textoSeguro(`"${ficha.frase}"`) : 'Nenhuma',
                         inline: false
                     }
