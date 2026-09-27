@@ -138,7 +138,21 @@ function validarEConstruirPersonagem(body) {
     const personagem = {};
 
     for (const campo of Object.keys(LIMITES)) {
-        personagem[campo] = sanitizarTexto(body[campo], LIMITES[campo]);
+        const valor = body[campo];
+
+        // Mentions não podem chegar ao Discord, nem mesmo neutralizadas.
+        // Rejeitamos a requisição antes de montar ou enviar o webhook.
+        if (typeof valor === 'string') {
+            if (/@(?:everyone|here)\b/i.test(valor)) {
+                throw new Error('Menções @everyone e @here não são permitidas.');
+            }
+
+            if (/<@&?\d+>|<@!\d+>|<#\d+>/i.test(valor)) {
+                throw new Error('Menções do Discord não são permitidas.');
+            }
+        }
+
+        personagem[campo] = sanitizarTexto(valor, LIMITES[campo]);
     }
 
     if (!personagem.nome) {
@@ -160,8 +174,8 @@ function montarPayloadDiscord(personagem) {
     return {
         content: null,
 
-        // Defesa principal contra mention injection.
-        // O Discord não deve interpretar nenhuma menção.
+        // Segunda camada de defesa: mesmo que alguma menção escape
+        // da validação, o Discord não deve interpretá-la.
         allowed_mentions: {
             parse: []
         },
@@ -171,21 +185,9 @@ function montarPayloadDiscord(personagem) {
             color: 0x7657e8,
 
             fields: [
-                {
-                    name: '**Nick/ID**',
-                    value: textoOuPadrao(personagem.nick),
-                    inline: true
-                },
-                {
-                    name: '**Gênero**',
-                    value: textoOuPadrao(personagem.genero),
-                    inline: true
-                },
-                {
-                    name: '**Raça**',
-                    value: textoOuPadrao(personagem.raca),
-                    inline: true
-                },
+                { name: '**Nick/ID**', value: textoOuPadrao(personagem.nick), inline: true },
+                { name: '**Gênero**', value: textoOuPadrao(personagem.genero), inline: true },
+                { name: '**Raça**', value: textoOuPadrao(personagem.raca), inline: true },
                 {
                     name: '**Origem / Vive em**',
                     value: textoOuPadrao(
@@ -193,46 +195,16 @@ function montarPayloadDiscord(personagem) {
                     ),
                     inline: false
                 },
-                {
-                    name: '**Profissão / Função**',
-                    value: textoOuPadrao(personagem.funcao),
-                    inline: true
-                },
-                {
-                    name: '**Idade**',
-                    value: textoOuPadrao(personagem.idade),
-                    inline: true
-                },
-                {
-                    name: '**🎭 Personalidade**',
-                    value: textoOuPadrao(personagem.personalidade),
-                    inline: false
-                },
-                {
-                    name: '**✨ Aparência**',
-                    value: textoOuPadrao(personagem.aparencia),
-                    inline: false
-                },
-                {
-                    name: '**⚔️ Habilidades**',
-                    value: textoOuPadrao(personagem.habilidades),
-                    inline: false
-                },
-                {
-                    name: '**🎒 Equipamentos**',
-                    value: textoOuPadrao(personagem.equipamentos),
-                    inline: false
-                },
-                {
-                    name: '**📖 Lore**',
-                    value: textoOuPadrao(personagem.lore),
-                    inline: false
-                },
+                { name: '**Profissão / Função**', value: textoOuPadrao(personagem.funcao), inline: true },
+                { name: '**Idade**', value: textoOuPadrao(personagem.idade), inline: true },
+                { name: '**🎭 Personalidade**', value: textoOuPadrao(personagem.personalidade), inline: false },
+                { name: '**✨ Aparência**', value: textoOuPadrao(personagem.aparencia), inline: false },
+                { name: '**⚔️ Habilidades**', value: textoOuPadrao(personagem.habilidades), inline: false },
+                { name: '**🎒 Equipamentos**', value: textoOuPadrao(personagem.equipamentos), inline: false },
+                { name: '**📖 Lore**', value: textoOuPadrao(personagem.lore), inline: false },
                 {
                     name: '**💬 Frase Marcante**',
-                    value: personagem.frase
-                        ? `"${personagem.frase}"`
-                        : 'Nenhuma',
+                    value: personagem.frase ? `"${personagem.frase}"` : 'Nenhuma',
                     inline: false
                 }
             ],
@@ -360,14 +332,12 @@ app.post('/enviar-webhook', async (req, res) => {
             });
         }
 
-        if (erro.message === 'Campo "nome" é obrigatório.') {
-            return res.status(400).json({
-                sucesso: false,
-                erro: erro.message
-            });
-        }
-
-        if (erro.message === 'Corpo da requisição inválido.') {
+        if (
+            erro.message === 'Campo "nome" é obrigatório.' ||
+            erro.message === 'Corpo da requisição inválido.' ||
+            erro.message === 'Menções @everyone e @here não são permitidas.' ||
+            erro.message === 'Menções do Discord não são permitidas.'
+        ) {
             return res.status(400).json({
                 sucesso: false,
                 erro: erro.message
