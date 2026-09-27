@@ -31,6 +31,10 @@ app.get('/', (_req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+app.get('/style.css', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'style.css'));
+});
+
 // Rota simples para verificar se o servidor está saudável.
 app.get('/health', (_req, res) => {
     res.status(200).json({ ok: true });
