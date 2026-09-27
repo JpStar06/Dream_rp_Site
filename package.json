@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/JpStar06/teste_Dream_rp#readme",
   "dependencies": {
+    "dotenv": "^18.0.4",
     "express": "^5.2.1"
   }
 }

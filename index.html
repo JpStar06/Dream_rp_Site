@@ -1417,8 +1417,9 @@ let personagens =
 /* ==========================================
    WEBHOOK DO DISCORD
 ========================================== */
+import 'dotenv/config';
 
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1553470216133017670/n4J5n-gwat7xcD_BG49fATvNOvMVbUYHuxEvdE9Dm2nwHjixzKTLjnJmp5-OMykK0NWM";
+const WEBHOOK_URL = process.env.WEBHOOK_URL;
 
 function enviarParaDiscord(personagem) {
 
