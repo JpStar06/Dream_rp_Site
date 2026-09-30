@@ -31,6 +31,10 @@ app.get('/', (_req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+app.get('/style.css', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'style.css'));
+});
+
 // Rota simples para verificar se o servidor está saudável.
 app.get('/health', (_req, res) => {
     res.status(200).json({ ok: true });
@@ -40,11 +44,11 @@ app.get('/health', (_req, res) => {
 // PROTEÇÕES DO ENVIO DE FICHAS
 // ==========================================
 
-// Limite de 2 fichas por IP a cada 60 segundos.
+// Limite de 1 ficha por IP a cada 60 segundos.
 // O Map é suficiente para esta aplicação porque existe uma única
 // instância do servidor. Entradas antigas são removidas periodicamente.
 const RATE_WINDOW_MS = 60 * 1000;
-const RATE_MAX_REQUESTS = 2;
+const RATE_MAX_REQUESTS = 1;
 const rateLimitMap = new Map();
 
 setInterval(() => {
@@ -197,11 +201,11 @@ function montarPayloadDiscord(personagem) {
                 },
                 { name: '**Profissão / Função**', value: textoOuPadrao(personagem.funcao), inline: true },
                 { name: '**Idade**', value: textoOuPadrao(personagem.idade), inline: true },
-                { name: '**🎭 Personalidade**', value: textoOuPadrao(personagem.personalidade), inline: false },
-                { name: '**✨ Aparência**', value: textoOuPadrao(personagem.aparencia), inline: false },
-                { name: '**⚔️ Habilidades**', value: textoOuPadrao(personagem.habilidades), inline: false },
-                { name: '**🎒 Equipamentos**', value: textoOuPadrao(personagem.equipamentos), inline: false },
-                { name: '**📖 Lore**', value: textoOuPadrao(personagem.lore), inline: false },
+                { name: '**Personalidade**', value: textoOuPadrao(personagem.personalidade), inline: false },
+                { name: '**Aparência**', value: textoOuPadrao(personagem.aparencia), inline: false },
+                { name: '**Habilidades**', value: textoOuPadrao(personagem.habilidades), inline: false },
+                { name: '**Equipamentos**', value: textoOuPadrao(personagem.equipamentos), inline: false },
+                { name: '**Lore**', value: textoOuPadrao(personagem.lore), inline: false },
                 {
                     name: '**💬 Frase Marcante**',
                     value: personagem.frase ? `"${personagem.frase}"` : 'Nenhuma',
